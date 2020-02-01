@@ -28,7 +28,7 @@ class OrderController extends Controller
             return view('web.clientOrder&Offer.my_order', compact('orders'));
         } else {
             // notification later
-            \session()->flash('fail','this page is empty');
+            \session()->flash('fail', 'this page is empty');
             return redirect()->back();
         }
 
@@ -58,7 +58,7 @@ class OrderController extends Controller
         if (count($orders) >= 1) {
             return view('web.clientOrder&Offer.previous-orders', compact('orders'));
         } else {
-            \session()->flash('fail','this page is empty');
+            \session()->flash('fail', 'this page is empty');
             return redirect()->back();
         }
 
@@ -123,18 +123,18 @@ class OrderController extends Controller
 
         $client = auth()->user()->id;
 
-$restaurant = session('restaurant');
-        $allOrdersPrice =0 ;
+        $restaurant = session('restaurant');
+        $allOrdersPrice = 0;
 
 
-            $restaurant = Restaurant::find($restaurant);
+        $restaurant = Restaurant::find($restaurant);
 
-            if ($restaurant->availability == 0) {
+        if ($restaurant->availability == 0) {
 
-                session()->flash('fail', 'resrauarnt is closed');
+            session()->flash('fail', 'resrauarnt is closed');
 
-                return redirect('sofra/cart');
-            }
+            return redirect('sofra/cart');
+        }
 
 
         foreach (session()->get('cart') as $order) {
@@ -142,16 +142,14 @@ $restaurant = session('restaurant');
             $amount = $order['amount'];
             $total = $amount * $order['price'];
             $order = auth()->user()->orders()->create([
-                'restaurant_id' => $restaurant,
+                'restaurant_id' => $restaurant->id,
                 'special_order' => $order['note'],
                 'state' => 'pending',
                 'cost' => $order['price'],
-                'client_id' => $client,
                 'commission' => settings()->commission,
                 'total' => $total,
 
             ]);
-
 
             $net = $total - ($total * settings()->commission);
 
@@ -169,8 +167,8 @@ $restaurant = session('restaurant');
                 $order->update([
                     'net' => $net,
                 ]);
-          //      $data = ['order' => $order->fresh()->load('products')];
-                $allOrdersPrice = $net ;
+                //      $data = ['order' => $order->fresh()->load('products')];
+                $allOrdersPrice = $net;
 
             } else {
 
@@ -181,7 +179,7 @@ $restaurant = session('restaurant');
         }
         session()->forget('cart');
         session()->forget('restaurant');
-        session()->flash('success', 'order sends successfully . total'.$allOrdersPrice);
+        session()->flash('success', 'order sends successfully . total' . $allOrdersPrice);
         return redirect('sofra/cart');
 
 

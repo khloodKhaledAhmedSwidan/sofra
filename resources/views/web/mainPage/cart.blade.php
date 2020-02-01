@@ -14,13 +14,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 offset-sm-3">
-                    <a href="{{route('send.AllCart')}}" class="add-new-link">Send Orders</a>
-                    @php$cart = Session::get('cart'); @endphp
 
 
 
 
-                    @foreach(Session::get('cart') as $cart)
+
+                    @if(!empty(session('cart')))
+                        <a href="{{route('send.AllCart')}}" class="add-new-link">Send Orders</a>
+                        @php$cart = Session::get('cart'); @endphp
+                        @foreach(Session::get('cart') as $cart)
 
                         <div class="cart-item">
                             <div class="row">
@@ -68,9 +70,13 @@
                     @endforeach
 
 
-                    <a href="{{url('sofra/products/'.session('restaurant'))}}" class="add-new-link fa-pull-left">Add more orders</a>
+                            <a href="{{url('sofra/products/'.session('restaurant'))}}" class="add-new-link fa-pull-left">Add more orders</a>
 
-                    <a href="{{route('remove.allCart')}}" class="add-new-link fa-pull-right">delete all cart</a>
+                            <a href="{{route('remove.allCart')}}" class="add-new-link fa-pull-right">delete all cart</a>
+                    @else
+                        <div>لا يوجد</div>
+                    @endif
+
                 </div>
             </div>
         </div>
